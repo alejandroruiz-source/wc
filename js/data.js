@@ -1,4 +1,5 @@
 // T005 — fetch layer for openfootball WC2026 data
+// T002 (groups) — module-level Promise cache so both sections share one HTTP request
 
 import {
   FIFA_CODE_TO_CONFEDERATION,
@@ -45,12 +46,7 @@ function sortTeams(teams) {
   });
 }
 
-/**
- * Fetch and enrich all WC2026 teams from worldcup.teams.json.
- * The feed is a flat array; each entry has fifa_code, confed, flag_icon, group.
- * @returns {Promise<Team[]>} Sorted, enriched team array.
- */
-export async function fetchTeams() {
+async function _doFetchTeams() {
   let response;
   try {
     const r = await fetch(TEAMS_URL);
@@ -74,4 +70,22 @@ export async function fetchTeams() {
     .map(enrichTeam);
 
   return sortTeams(teams);
+}
+
+// Cache the in-flight/resolved Promise so concurrent callers (teamsSection + groupsSection)
+// share one HTTP request per page load. Cleared on rejection so retry() works correctly.
+let _teamsPromise = null;
+
+/**
+ * Fetch and enrich all WC2026 teams from worldcup.teams.json.
+ * @returns {Promise<Team[]>} Sorted, enriched team array.
+ */
+export function fetchTeams() {
+  if (!_teamsPromise) {
+    _teamsPromise = _doFetchTeams().catch(err => {
+      _teamsPromise = null;
+      throw err;
+    });
+  }
+  return _teamsPromise;
 }

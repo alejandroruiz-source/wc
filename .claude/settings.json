@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item -ItemType Directory -Path \"specs\\\\002-groups-browser\\\\checklists\" -Force)",
+      "PowerShell(New-Item -ItemType Directory -Path \"specs\\\\002-groups-browser\\\\contracts\" -Force)",
+      "PowerShell(& \".\\\\.specify\\\\extensions\\\\git\\\\scripts\\\\powershell\\\\create-new-feature.ps1\" -Json -ShortName \"match-schedule\" \"Match schedule section showing WC2026 matches per day with local and venue time zones\")",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
