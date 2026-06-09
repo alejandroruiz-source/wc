@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WC2026 – World Cup 2026</title>
+  <meta name="description" content="World Cup 2026 teams, groups, and match schedule.">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!--
+    T002: teams.js registers the Alpine component via 'alpine:init' event.
+    It must appear before the Alpine CDN script so the listener is wired first.
+    Both scripts are deferred; document order guarantees teams.js executes first.
+  -->
+  <script type="module" src="js/teams.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <h1 class="site-title">⚽ World Cup 2026</h1>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="#teams" class="nav-link nav-link--active">Teams</a>
+        <!-- Groups and Schedule nav items added in future features -->
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+
+    <!--
+      Teams Section (T007, T008, T009)
+      x-data mounts the teamsSection Alpine component; init() is auto-called.
+    -->
+    <section id="teams" class="section" x-data="teamsSection" aria-labelledby="teams-heading">
+      <h2 id="teams-heading" class="section-title">Teams</h2>
+
+      <!-- T008: Loading state -->
+      <div class="loading-state" x-show="isLoading" x-cloak aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <p class="loading-text">Loading teams…</p>
+      </div>
+
+      <!-- T009: Error state -->
+      <div class="error-state" x-show="hasError && !isLoading" x-cloak role="alert">
+        <p class="error-icon" aria-hidden="true">⚠️</p>
+        <p class="error-message" x-text="errorMessage"></p>
+        <button
+          class="btn btn--retry"
+          x-on:click="retry()"
+          aria-label="Retry loading teams"
+        >Try Again</button>
+      </div>
+
+      <!-- Teams content: filter bar + grid (shown when data is ready) -->
+      <div x-show="!isLoading && !hasError" x-cloak>
+
+        <!-- T015, T016, T019: Filter controls — chips + search + clear -->
+        <div class="filter-controls" x-show="allTeams.length > 0">
+
+          <!-- T015: Confederation chip buttons -->
+          <div class="chip-bar" role="group" aria-label="Filter by confederation">
+            <template x-for="chip in availableConfederations" :key="chip.key">
+              <button
+                class="chip"
+                :class="{ 'chip--active': activeConfederation === chip.key }"
+                x-on:click="selectChip(chip.key)"
+                :aria-pressed="String(activeConfederation === chip.key)"
+                x-text="chip.label"
+              ></button>
+            </template>
+          </div>
+
+          <!-- T019: Search input + T016: Clear button -->
+          <div class="search-row">
+            <label for="team-search" class="sr-only">Search teams by name</label>
+            <input
+              id="team-search"
+              type="search"
+              class="search-input"
+              x-model="searchQuery"
+              placeholder="Search teams…"
+            >
+            <button
+              class="btn btn--clear"
+              x-show="isFiltered"
+              x-cloak
+              x-on:click="clearFilters()"
+              aria-label="Clear all filters"
+            >Clear</button>
+          </div>
+
+        </div>
+
+        <!-- No-results message -->
+        <p
+          class="no-results"
+          x-show="!hasResults"
+          x-cloak
+          role="status"
+          aria-live="polite"
+        >No teams match your filters.</p>
+
+        <!-- T007: Team card grid -->
+        <div class="teams-grid" x-show="hasResults" x-cloak>
+          <template x-for="team in filteredTeams" :key="team.code || team.name">
+            <article class="team-card">
+              <div class="team-card__flag" aria-hidden="true" x-text="team.flagEmoji"></div>
+              <h3 class="team-card__name" x-text="team.name"></h3>
+              <p
+                class="team-card__confederation"
+                x-text="team.confederation + ' – ' + team.region"
+              ></p>
+              <p class="team-card__group">
+                Group&nbsp;<span x-text="team.group"></span>
+              </p>
+            </article>
+          </template>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      Data:
+      <a
+        href="https://github.com/openfootball/worldcup.json"
+        target="_blank"
+        rel="noopener noreferrer"
+      >openfootball/worldcup.json</a>
+    </p>
+  </footer>
+
+</body>
+</html>
