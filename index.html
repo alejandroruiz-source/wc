@@ -13,6 +13,7 @@
     Both scripts are deferred; document order guarantees teams.js executes first.
   -->
   <script type="module" src="js/teams.js"></script>
+  <script type="module" src="js/groups.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 </head>
 <body>
@@ -22,7 +23,7 @@
       <h1 class="site-title">⚽ World Cup 2026</h1>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="#teams" class="nav-link nav-link--active">Teams</a>
-        <!-- Groups and Schedule nav items added in future features -->
+        <a href="#groups" class="nav-link">Groups</a>
       </nav>
     </div>
   </header>
@@ -120,6 +121,54 @@
         </div>
 
       </div>
+    </section>
+
+    <!-- Groups Section (T003, T004) -->
+    <section id="groups" class="section" x-data="groupsSection" aria-labelledby="groups-heading">
+      <h2 id="groups-heading" class="section-title">Groups</h2>
+
+      <!-- Loading state -->
+      <div class="loading-state" x-show="isLoading" x-cloak aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <p class="loading-text">Loading groups…</p>
+      </div>
+
+      <!-- Error state -->
+      <div class="error-state" x-show="hasError && !isLoading" x-cloak role="alert">
+        <p class="error-icon" aria-hidden="true">⚠️</p>
+        <p class="error-message" x-text="errorMessage"></p>
+        <button
+          class="btn btn--retry"
+          x-on:click="retry()"
+          aria-label="Retry loading groups"
+        >Try Again</button>
+      </div>
+
+      <!-- Groups content (shown when data is ready) -->
+      <div x-show="!isLoading && !hasError" x-cloak>
+        <div class="groups-grid">
+          <template x-for="group in groupedTeams" :key="group.id">
+            <article class="group-panel">
+              <h3 class="group-panel__title">
+                Group&nbsp;<span x-text="group.id"></span>
+              </h3>
+              <ul class="team-list">
+                <template x-for="team in group.teams" :key="team.code">
+                  <li class="team-row">
+                    <span class="team-row__flag" aria-hidden="true" x-text="team.flagEmoji"></span>
+                    <span class="team-row__name" x-text="team.name"></span>
+                    <span
+                      class="team-row__confederation"
+                      x-text="team.confederation + ' – ' + team.region"
+                    ></span>
+                  </li>
+                </template>
+              </ul>
+            </article>
+          </template>
+        </div>
+      </div>
+
     </section>
 
   </main>
