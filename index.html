@@ -14,6 +14,7 @@
   -->
   <script type="module" src="js/teams.js"></script>
   <script type="module" src="js/groups.js"></script>
+  <script type="module" src="js/schedule.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 </head>
 <body>
@@ -24,6 +25,7 @@
       <nav class="site-nav" aria-label="Main navigation">
         <a href="#teams" class="nav-link nav-link--active">Teams</a>
         <a href="#groups" class="nav-link">Groups</a>
+        <a href="#schedule" class="nav-link">Schedule</a>
       </nav>
     </div>
   </header>
@@ -172,6 +174,95 @@
     </section>
 
   </main>
+
+    <!-- Schedule Section (T004, T005) -->
+    <section id="schedule" class="section" x-data="scheduleSection" aria-labelledby="schedule-heading">
+      <h2 id="schedule-heading" class="section-title">Schedule</h2>
+
+      <!-- Loading state -->
+      <div class="loading-state" x-show="isLoading" x-cloak aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <p class="loading-text">Loading schedule…</p>
+      </div>
+
+      <!-- Error state -->
+      <div class="error-state" x-show="hasError && !isLoading" x-cloak role="alert">
+        <p class="error-icon" aria-hidden="true">⚠️</p>
+        <p class="error-message" x-text="errorMessage"></p>
+        <button
+          class="btn btn--retry"
+          x-on:click="retry()"
+          aria-label="Retry loading schedule"
+        >Try Again</button>
+      </div>
+
+      <!-- Schedule content (shown when data is ready) -->
+      <div x-show="!isLoading && !hasError" x-cloak>
+
+        <!-- Day filter -->
+        <div class="day-filter-bar" x-show="allMatches.length > 0">
+          <label for="day-select" class="sr-only">Filter by day</label>
+          <select
+            id="day-select"
+            class="day-select"
+            x-model="selectedDay"
+            aria-label="Filter matches by day"
+          >
+            <option value="">All days</option>
+            <template x-for="day in availableDays" :key="day.value">
+              <option :value="day.value" x-text="day.label"></option>
+            </template>
+          </select>
+        </div>
+
+        <!-- No-results message (day filter active with no matches) -->
+        <p
+          class="no-results"
+          x-show="!hasResults"
+          x-cloak
+          role="status"
+          aria-live="polite"
+        >No matches on this day.</p>
+
+        <!-- Day groups -->
+        <div class="schedule-days" x-show="hasResults" x-cloak>
+          <template x-for="group in filteredDayGroups" :key="group.date">
+            <div class="day-group">
+              <h3 class="day-group__header" x-text="group.label"></h3>
+              <div class="day-group__matches">
+                <template x-for="match in group.matches" :key="match.date + match.team1 + match.team2">
+                  <article class="match-card">
+                    <span class="match-card__round" x-text="match.round"></span>
+                    <div class="match-teams">
+                      <div class="match-team">
+                        <span class="match-team__flag" aria-hidden="true" x-text="match.team1Flag || '🌐'"></span>
+                        <span class="match-team__name" x-text="match.team1"></span>
+                      </div>
+                      <span class="match-team--vs">vs</span>
+                      <div class="match-team">
+                        <span class="match-team__name" x-text="match.team2"></span>
+                        <span class="match-team__flag" aria-hidden="true" x-text="match.team2Flag || '🌐'"></span>
+                      </div>
+                    </div>
+                    <div class="match-times">
+                      <div class="match-time">
+                        <span class="match-time__label" x-text="userTimezone"></span>
+                        <span class="match-time__value" x-text="formatLocalTime(match.utcDate)"></span>
+                      </div>
+                      <div class="match-time">
+                        <span class="match-time__label" x-text="match.ground"></span>
+                        <span class="match-time__value" x-text="formatVenueTime(match.utcDate, match.venueTimezone)"></span>
+                      </div>
+                    </div>
+                  </article>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+
+      </div>
+    </section>
 
   <footer class="site-footer">
     <p>

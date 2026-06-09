@@ -121,6 +121,42 @@ export const FIFA_CODE_TO_CONFEDERATION = {
 };
 
 /**
+ * Maps WC2026 host city name substrings to IANA timezone identifiers.
+ * Used by lookupVenueTimezone() to derive venue-local time from UTC.
+ */
+export const VENUE_TIMEZONES = {
+  'New York':     'America/New_York',
+  'Los Angeles':  'America/Los_Angeles',
+  'Dallas':       'America/Chicago',
+  'Santa Clara':  'America/Los_Angeles',
+  'Miami':        'America/New_York',
+  'Seattle':      'America/Los_Angeles',
+  'Boston':       'America/New_York',
+  'Atlanta':      'America/New_York',
+  'Kansas City':  'America/Chicago',
+  'Houston':      'America/Chicago',
+  'Philadelphia': 'America/New_York',
+  'Toronto':      'America/Toronto',
+  'Vancouver':    'America/Vancouver',
+  'Mexico City':  'America/Mexico_City',
+  'Guadalajara':  'America/Mexico_City',
+  'Monterrey':    'America/Monterrey',
+};
+
+/**
+ * Returns the IANA timezone for a given ground/venue string by substring match.
+ * Returns null if no host city keyword matches (caller should display UTC).
+ * @param {string} ground
+ * @returns {string|null}
+ */
+export function lookupVenueTimezone(ground) {
+  for (const key of Object.keys(VENUE_TIMEZONES)) {
+    if (ground.includes(key)) return VENUE_TIMEZONES[key];
+  }
+  return null;
+}
+
+/**
  * Converts an ISO 3166-1 alpha-2 code to a Unicode flag emoji.
  * Returns '🌐' for null, empty, or unrecognised codes.
  * @param {string|null} isoCode
