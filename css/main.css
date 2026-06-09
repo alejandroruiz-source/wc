@@ -515,6 +515,145 @@ button {
   }
 }
 
+/* ─── T005 (schedule): Day groups ───────────────────────────────────────────── */
+.schedule-days {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.day-group__header {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid var(--color-accent);
+  margin-bottom: var(--space-md);
+}
+
+.day-group__matches {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* ─── T005 (schedule): Match card ───────────────────────────────────────────── */
+.match-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  box-shadow: var(--shadow-sm);
+}
+
+.match-card__round {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.match-teams {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.match-team {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.match-team:last-of-type {
+  justify-content: flex-end;
+}
+
+.match-team__flag {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.match-team__name {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.match-team--vs {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.match-times {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--color-border);
+}
+
+.match-time {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.match-time__label {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 20ch;
+}
+
+.match-time__value {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ─── T008 (schedule): Day filter select ────────────────────────────────────── */
+.day-filter-bar {
+  margin-bottom: var(--space-lg);
+}
+
+.day-select {
+  min-height: 44px;
+  padding: var(--space-sm) var(--space-md);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: var(--text-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  width: 100%;
+  max-width: 400px;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.day-select:focus {
+  outline: none;
+  border-color: var(--color-primary-lt);
+  box-shadow: 0 0 0 2px rgba(42, 95, 158, .2);
+}
+
 /* ─── Site footer ────────────────────────────────────────────────────────────── */
 .site-footer {
   border-top: 1px solid var(--color-border);
