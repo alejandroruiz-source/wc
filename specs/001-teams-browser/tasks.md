@@ -87,13 +87,13 @@ chip appears active; tap chip again → 48 teams return; filter with ≤2 team c
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Add `availableConfederations` getter and `selectChip(key)` method to `js/teams.js`: getter returns distinct `ConfederationChip[]` (each with `key`, `label` as `key + ' – ' + region`, `active = key === activeConfederation`) derived from `allTeams`, sorted alphabetically by key; `selectChip(key)` toggles `activeConfederation` (set to key if not active, null if already active)
-- [ ] T013 [US2] Update `filteredTeams` getter in `js/teams.js` to filter `allTeams` by `activeConfederation` when non-null (keep team if `team.confederation === activeConfederation`)
-- [ ] T014 [P] [US2] Add `isFiltered` getter and `clearFilters()` method to `js/teams.js`: `isFiltered = activeConfederation !== null || searchQuery.trim() !== ''`; `clearFilters()` sets both to initial values (`null` and `''`)
-- [ ] T015 [US2] Add confederation chip bar markup to `index.html` Teams section: `x-for` over `availableConfederations`, each chip is a `<button>` displaying `label`, with `:class` binding for active visual state, `x-on:click="selectChip(chip.key)"`; chip bar placed above the card grid
-- [ ] T016 [P] [US2] Add Clear button markup to `index.html` Teams section: `<button x-show="isFiltered" x-on:click="clearFilters()">Clear</button>` positioned in the filter controls row
-- [ ] T017 [US2] Add "no results" message markup to `index.html` Teams section: element with `x-show="!isLoading && !hasError && !hasResults"` containing "No teams match your filters." text
-- [ ] T018 [P] [US2] Add chip bar, chip button, and Clear button CSS to `css/main.css`: chip bar as `display: flex; flex-wrap: wrap; gap: 8px`, each chip `min-height: 44px`, distinct active vs inactive background/border/colour, Clear button consistent with chip styling, all chips accessible on 375px viewport without horizontal scroll
+- [x] T012 [US2] Add `availableConfederations` getter and `selectChip(key)` method to `js/teams.js`: getter returns distinct `ConfederationChip[]` (each with `key`, `label` as `key + ' – ' + region`, `active = key === activeConfederation`) derived from `allTeams`, sorted alphabetically by key; `selectChip(key)` toggles `activeConfederation` (set to key if not active, null if already active)
+- [x] T013 [US2] Update `filteredTeams` getter in `js/teams.js` to filter `allTeams` by `activeConfederation` when non-null (keep team if `team.confederation === activeConfederation`)
+- [x] T014 [P] [US2] Add `isFiltered` getter and `clearFilters()` method to `js/teams.js`: `isFiltered = activeConfederation !== null || searchQuery.trim() !== ''`; `clearFilters()` sets both to initial values (`null` and `''`)
+- [x] T015 [US2] Add confederation chip bar markup to `index.html` Teams section: `x-for` over `availableConfederations`, each chip is a `<button>` displaying `label`, with `:class` binding for active visual state, `x-on:click="selectChip(chip.key)"`; chip bar placed above the card grid
+- [x] T016 [P] [US2] Add Clear button markup to `index.html` Teams section: `<button x-show="isFiltered" x-on:click="clearFilters()">Clear</button>` positioned in the filter controls row
+- [x] T017 [US2] Add "no results" message markup to `index.html` Teams section: element with `x-show="!isLoading && !hasError && !hasResults"` containing "No teams match your filters." text
+- [x] T018 [P] [US2] Add chip bar, chip button, and Clear button CSS to `css/main.css`: chip bar as `display: flex; flex-wrap: wrap; gap: 8px`, each chip `min-height: 44px`, distinct active vs inactive background/border/colour, Clear button consistent with chip styling, all chips accessible on 375px viewport without horizontal scroll
 
 **Checkpoint**: US2 is independently functional. Confirm US1 still works. Tap chips,
 verify filtered counts, verify Clear restores all teams, verify OFC (few teams) shows
@@ -112,10 +112,10 @@ message shown. (See `quickstart.md` §US3.)
 
 ### Implementation for User Story 3
 
-- [ ] T019 [US3] Add search input markup to `index.html` Teams section: `<input type="search" x-model="searchQuery" placeholder="Search teams…">` with an associated `<label>` (accessible), placed in the filter controls row alongside chip bar
-- [ ] T020 [US3] Update `filteredTeams` getter in `js/teams.js` to also filter by `searchQuery`: apply `team.name.toLowerCase().includes(searchQuery.trim().toLowerCase())` on top of the existing confederation filter; both filters applied simultaneously on each render
-- [ ] T021 [P] [US3] Add search input CSS to `css/main.css`: `width: 100%` on mobile, max-width cap on wider screens, `min-height: 44px`, consistent visual style with chip bar (border, border-radius, padding, font)
-- [ ] T022 [US3] Verify combined filter+search in `js/teams.js`: confirm `filteredTeams` correctly AND-combines `activeConfederation` and `searchQuery` filters; ensure "no results" message (`x-show="!hasResults"` from T017) fires correctly for both search-empty and filter-empty states
+- [x] T019 [US3] Add search input markup to `index.html` Teams section: `<input type="search" x-model="searchQuery" placeholder="Search teams…">` with an associated `<label>` (accessible), placed in the filter controls row alongside chip bar
+- [x] T020 [US3] Update `filteredTeams` getter in `js/teams.js` to also filter by `searchQuery`: apply `team.name.toLowerCase().includes(searchQuery.trim().toLowerCase())` on top of the existing confederation filter; both filters applied simultaneously on each render
+- [x] T021 [P] [US3] Add search input CSS to `css/main.css`: `width: 100%` on mobile, max-width cap on wider screens, `min-height: 44px`, consistent visual style with chip bar (border, border-radius, padding, font)
+- [x] T022 [US3] Verify combined filter+search in `js/teams.js`: confirm `filteredTeams` correctly AND-combines `activeConfederation` and `searchQuery` filters; ensure "no results" message (`x-show="!hasResults"` from T017) fires correctly for both search-empty and filter-empty states
 
 **Checkpoint**: All three user stories independently functional. Run the full quickstart.md
 smoke test — 48 cards, chip filter, search, combined filter+search, no-results, retry,
@@ -127,11 +127,11 @@ and 375px mobile viewport checks should all pass.
 
 **Purpose**: Visual refinement, constitution compliance verification, and final validation.
 
-- [ ] T023 [P] Verify `js/config.js` `FIFA_TO_ISO` coverage: confirm all 48 WC2026 team codes are mapped; add any missing entries; document the England/UK special case (FIFA code `ENG` → use 🇬🇧 flag via ISO `GB`) in a comment in `js/config.js`
-- [ ] T024 [P] Add visual polish CSS to `css/main.css`: flag emoji `font-size` and line-height, group badge pill style, card hover/focus state, inter-section spacing, consistent heading typography for the Teams section title
-- [ ] T025 [P] Add `<title>`, `<meta name="description">`, `lang="en"` on `<html>`, and ARIA labels to all interactive elements (chip buttons, search input, retry button) in `index.html`
-- [ ] T026 Run full quickstart.md validation end-to-end: US1 (48 cards, loading, error/retry), US2 (chip filter, clear, no-results), US3 (search, combined, no-results), and mobile check at 375px; document any deviations found
-- [ ] T027 [P] Verify total uncompressed file weight of `index.html` + `css/main.css` + `js/config.js` + `js/data.js` + `js/teams.js` stays under 200 KB (constitution Principle IV); log sizes to confirm compliance
+- [x] T023 [P] Verify `js/config.js` `FIFA_TO_ISO` coverage: confirm all 48 WC2026 team codes are mapped; add any missing entries; document the England/UK special case (FIFA code `ENG` → use 🇬🇧 flag via ISO `GB`) in a comment in `js/config.js`
+- [x] T024 [P] Add visual polish CSS to `css/main.css`: flag emoji `font-size` and line-height, group badge pill style, card hover/focus state, inter-section spacing, consistent heading typography for the Teams section title
+- [x] T025 [P] Add `<title>`, `<meta name="description">`, `lang="en"` on `<html>`, and ARIA labels to all interactive elements (chip buttons, search input, retry button) in `index.html`
+- [x] T026 Run full quickstart.md validation end-to-end: US1 (48 cards, loading, error/retry), US2 (chip filter, clear, no-results), US3 (search, combined, no-results), and mobile check at 375px; document any deviations found
+- [x] T027 [P] Verify total uncompressed file weight of `index.html` + `css/main.css` + `js/config.js` + `js/data.js` + `js/teams.js` stays under 200 KB (constitution Principle IV); log sizes to confirm compliance
 
 ---
 

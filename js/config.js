@@ -12,8 +12,14 @@ export const CONFEDERATION_REGION = {
 
 /**
  * Maps FIFA 3-letter code → ISO 3166-1 alpha-2 code for emoji flag derivation.
- * ENG / SCO / WAL / NIR all map to 'GB' (Union Jack) — closest single-country emoji.
  * Codes absent from this table fall back to the globe emoji (🌐).
+ *
+ * WC2026 note — England/UK special case:
+ *   ENG (England, WC2026 qualifier) → 'GB' (🇬🇧 Union Jack).
+ *   Unicode has no standalone England/St-George's-Cross emoji outside Regional Tag
+ *   sequences (🏴󠁧󠁢󠁥󠁮󠁧󠁿), which have inconsistent browser support. The GB flag is the
+ *   closest broadly-supported alternative.  SCO / WAL / NIR are mapped for
+ *   completeness but did not qualify for WC2026.
  */
 export const FIFA_TO_ISO = {
   // CONCACAF

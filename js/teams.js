@@ -1,26 +1,46 @@
 // T006 — Alpine.js teamsSection component
+// T012, T013, T014, T020 — Phase 4 & 5: confederation chip filter + name search
 
 import { fetchTeams, FetchError } from './data.js';
 
 document.addEventListener('alpine:init', () => {
   Alpine.data('teamsSection', () => ({
     allTeams: [],
-    activeConfederation: null, // used in Phase 4 (chip filter)
-    searchQuery: '',           // used in Phase 5 (search)
+    activeConfederation: null,
+    searchQuery: '',
     isLoading: true,
     hasError: false,
     errorMessage: '',
 
-    // Phase 3: returns full sorted list.
-    // Phase 4 wires confederation filter; Phase 5 wires search.
+    // T012: Distinct confederation chips from allTeams, sorted alphabetically by key
+    get availableConfederations() {
+      const seen = new Set();
+      const chips = [];
+      for (const team of this.allTeams) {
+        if (!seen.has(team.confederation)) {
+          seen.add(team.confederation);
+          chips.push({ key: team.confederation, label: team.confederation + ' – ' + team.region });
+        }
+      }
+      return chips.sort((a, b) => a.key.localeCompare(b.key));
+    },
+
+    // T013 + T020: AND-combine confederation filter and case-insensitive name search
     get filteredTeams() {
-      return this.allTeams;
+      const confed = this.activeConfederation;
+      const query = this.searchQuery.trim().toLowerCase();
+      return this.allTeams.filter(team => {
+        const matchesConfed = !confed || team.confederation === confed;
+        const matchesSearch = !query || team.name.toLowerCase().includes(query);
+        return matchesConfed && matchesSearch;
+      });
     },
 
     get hasResults() {
       return this.filteredTeams.length > 0;
     },
 
+    // T014: isFiltered true when either filter is active
     get isFiltered() {
       return this.activeConfederation !== null || this.searchQuery.trim() !== '';
     },
@@ -51,12 +71,12 @@ document.addEventListener('alpine:init', () => {
       await this._load();
     },
 
-    // Stub — wired in Phase 4
+    // T012: Toggle activeConfederation (set if new, clear if already active)
     selectChip(key) {
       this.activeConfederation = this.activeConfederation === key ? null : key;
     },
 
-    // Stub — wired in Phase 4 & 5
+    // T014: Reset both filters to initial state
     clearFilters() {
       this.activeConfederation = null;
       this.searchQuery = '';

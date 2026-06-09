@@ -33,8 +33,8 @@
       Teams Section (T007, T008, T009)
       x-data mounts the teamsSection Alpine component; init() is auto-called.
     -->
-    <section id="teams" class="section" x-data="teamsSection">
-      <h2 class="section-title">Teams</h2>
+    <section id="teams" class="section" x-data="teamsSection" aria-labelledby="teams-heading">
+      <h2 id="teams-heading" class="section-title">Teams</h2>
 
       <!-- T008: Loading state -->
       <div class="loading-state" x-show="isLoading" x-cloak aria-live="polite">
@@ -56,10 +56,42 @@
       <!-- Teams content: filter bar + grid (shown when data is ready) -->
       <div x-show="!isLoading && !hasError" x-cloak>
 
-        <!--
-          Filter bar placeholder — confederation chips (Phase 4) and
-          search input (Phase 5) are added here.
-        -->
+        <!-- T015, T016, T019: Filter controls — chips + search + clear -->
+        <div class="filter-controls" x-show="allTeams.length > 0">
+
+          <!-- T015: Confederation chip buttons -->
+          <div class="chip-bar" role="group" aria-label="Filter by confederation">
+            <template x-for="chip in availableConfederations" :key="chip.key">
+              <button
+                class="chip"
+                :class="{ 'chip--active': activeConfederation === chip.key }"
+                x-on:click="selectChip(chip.key)"
+                :aria-pressed="String(activeConfederation === chip.key)"
+                x-text="chip.label"
+              ></button>
+            </template>
+          </div>
+
+          <!-- T019: Search input + T016: Clear button -->
+          <div class="search-row">
+            <label for="team-search" class="sr-only">Search teams by name</label>
+            <input
+              id="team-search"
+              type="search"
+              class="search-input"
+              x-model="searchQuery"
+              placeholder="Search teams…"
+            >
+            <button
+              class="btn btn--clear"
+              x-show="isFiltered"
+              x-cloak
+              x-on:click="clearFilters()"
+              aria-label="Clear all filters"
+            >Clear</button>
+          </div>
+
+        </div>
 
         <!-- No-results message -->
         <p
